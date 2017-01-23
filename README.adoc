@@ -1,0 +1,77 @@
+definition_monade.adoc
+Détails
+Activité
+LA SEMAINE DERNIÈRE
+
+Vous avez importé un élément
+AsciiDocLIVE • sam. 16:17
+Texte
+definition_monade.adoc
+Aucune activité enregistrée avant le 21 janvier 2017
+
+Nouveau Drive d'équipe
+
+= Une monade c'est quoi et à quoi ca sert ?
+
+Admettons que vous ayez ce genre de code : 
+
+[source,java]
+Entity x = getEntity1();
+Entity y = getEntity2();
+Entity z = x.get() + y.get();
+
+Il a l'air tout bête comme ca mais il peut générer des comportements inattendu. Par exemple *getEntity1()* peut renvoyer une exception, ou alors *y.get()* peut renvoyer null.
+
+Si on se met à gérer tous les cas d'erreurs on a vite fait de submerger le code métier avec du code technique.
+
+Pour palier à ca on peut par exemple utiliser l'link:https://fr.wikipedia.org/wiki/Programmation_orient%C3%A9e_aspect[AOP] pour rajouter des comportement autour de certaines méthodes.
+
+Si on utilise un langage de programmation fonctionnel un autre moyen est d'utiliser des Monades.
+
+=== Exemple en Java : La Monade Option
+
+Cette monade va permettre de gérer tout une liste d'opération sans avoir à gérer les cas d'exception dans le code métier. Ainsi le code restera lisible.
+
+Soit une map avec des continent , des pays, et des capitales :
+[source, java]
+Splitter.MapSplitter splitter = Splitter.on(", ").withKeyValueSeparator(" -> ");
+Map<String, Map<String, String>> capitalCities = new HashMap<>() {{
+  put("Europe", splitter.split("France -> Paris, Espagne -> Madrid"));
+  put("Amérique", splitter.split("Etats-Unis -> Washington"));
+}};
+
+Pour afficher la capitale de la France voilà a quoi le code resemblerait avec la programmation impérative classique: 
+
+[source, java]
+Map<String, String> europe = capitalCities.get("Europe");
+if (europe != null) {
+    String city = europe.get("France");
+    if (city != null && city.equals("Paris")){
+        System.out.println("La capitale de la France est : "+city);
+    }
+}
+
+Puis avec une Monade Option :
+[source, java]
+Option.wrap(capitalCities)
+        .andThen(accessContinent("Europe"))
+        .andThen(accessCountry("France"))
+        .andThen(printCapitalCity());
+        
+On remarque tout de suite que le deuxième exemple est beaucoup plus lisible. Même une personne avec un profile non technique pourrait le comprendre. Alors vous allez me dire que c'est de la triche car on a extrait la complexité dans d'autre méthode sur le second exemple. Oui mais même si je faisais la même chose sur le premier exemple je ne pourrais pas me débarasser du code technique tel que les ifs et ainsi lire mon alogorithme comme une succession d'étapes. Je ne pourrais pas non plus me débarrasser des création de variables tel que _europe_ et _city_.Ceci est rendu possible notamment par les link:https://fr.wikipedia.org/wiki/Fermeture_%28informatique%29[closures], c'est à dire une fonction qui garde le context d'execution et qui peut être passé en paramêtre d'une autre fonction.
+
+Pour avoir plus de détail sur l'implémentation de cet exemple je vous reommande vivement link:http://blog.xebia.fr/2012/04/04/monades-java-monstre-cosmique/[cet article] écrit par link:https://kerflyn.wordpress.com/[François Sarradin] du blog de Xébia dont je me suis fortement inspiré.
+
+=== Conclusion
+
+Pour conclure je vais me contenter de citer François Sarradin :
+
+[quote]
+____
+*Ainsi, les monades sont :*
+
+. une solution issue de la programmation fonctionnelle permettant de représenter une succession de traitements, tout comme la programmation impérative représente par une séquence d’instructions cette succession de traitements
+. un moyen d’encapsuler la notion d’état mutable et le confiner dans un « espace de travail »
+. des contextes d’exécution permettant de modifier le comportement non pas des traitements mais du chaînage sur ces traitements
+____
+
