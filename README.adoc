@@ -1,16 +1,3 @@
-definition_monade.adoc
-Détails
-Activité
-LA SEMAINE DERNIÈRE
-
-Vous avez importé un élément
-AsciiDocLIVE • sam. 16:17
-Texte
-definition_monade.adoc
-Aucune activité enregistrée avant le 21 janvier 2017
-
-Nouveau Drive d'équipe
-
 = Une monade c'est quoi et à quoi ca sert ?
 
 Admettons que vous ayez ce genre de code : 
@@ -24,7 +11,7 @@ Il a l'air tout bête comme ca mais il peut générer des comportements inattend
 
 Si on se met à gérer tous les cas d'erreurs on a vite fait de submerger le code métier avec du code technique.
 
-Pour palier à ca on peut par exemple utiliser l'link:https://fr.wikipedia.org/wiki/Programmation_orient%C3%A9e_aspect[AOP] pour rajouter des comportement autour de certaines méthodes.
+Pour palier à ca on peut par exemple utiliser l'link:https://fr.wikipedia.org/wiki/Programmation_orient%C3%A9e_aspect[AOP] pour rajouter des comportements autour de certaines méthodes.
 
 Si on utilise un langage de programmation fonctionnel un autre moyen est d'utiliser des Monades.
 
@@ -32,7 +19,7 @@ Si on utilise un langage de programmation fonctionnel un autre moyen est d'utili
 
 Cette monade va permettre de gérer tout une liste d'opération sans avoir à gérer les cas d'exception dans le code métier. Ainsi le code restera lisible.
 
-Soit une map avec des continent , des pays, et des capitales :
+Soit une map avec des continents, des pays et des capitales :
 [source, java]
 Splitter.MapSplitter splitter = Splitter.on(", ").withKeyValueSeparator(" -> ");
 Map<String, Map<String, String>> capitalCities = new HashMap<>() {{
@@ -40,7 +27,7 @@ Map<String, Map<String, String>> capitalCities = new HashMap<>() {{
   put("Amérique", splitter.split("Etats-Unis -> Washington"));
 }};
 
-Pour afficher la capitale de la France voilà a quoi le code resemblerait avec la programmation impérative classique: 
+Pour afficher la capitale de la France voilà a quoi le code ressemblerait avec la programmation impérative classique: 
 
 [source, java]
 Map<String, String> europe = capitalCities.get("Europe");
@@ -58,9 +45,9 @@ Option.wrap(capitalCities)
         .andThen(accessCountry("France"))
         .andThen(printCapitalCity());
         
-On remarque tout de suite que le deuxième exemple est beaucoup plus lisible. Même une personne avec un profile non technique pourrait le comprendre. Alors vous allez me dire que c'est de la triche car on a extrait la complexité dans d'autre méthode sur le second exemple. Oui mais même si je faisais la même chose sur le premier exemple je ne pourrais pas me débarasser du code technique tel que les ifs et ainsi lire mon alogorithme comme une succession d'étapes. Je ne pourrais pas non plus me débarrasser des création de variables tel que _europe_ et _city_.Ceci est rendu possible notamment par les link:https://fr.wikipedia.org/wiki/Fermeture_%28informatique%29[closures], c'est à dire une fonction qui garde le context d'execution et qui peut être passé en paramêtre d'une autre fonction.
+On remarque tout de suite que le deuxième exemple est beaucoup plus lisible. Même une personne avec un profile non technique pourrait le comprendre. Alors vous allez me dire que c'est de la triche car on a extrait la complexité dans d'autre méthode sur le second exemple. Oui mais même si je faisais la même chose sur le premier exemple je ne pourrais pas me débarrasser du code technique tel que les ifs et ainsi lire mon algorithme comme une succession d'étapes. Je ne pourrais pas non plus me débarrasser des créations de variables tel que _europe_ et _city_. Ceci est rendu possible notamment par les  link:https://fr.wikipedia.org/wiki/Fermeture_%28informatique%29[closures], c'est à dire une fonction qui garde le contexte d'exécution et qui peut être passée en paramètre d'une autre fonction.
 
-Pour avoir plus de détail sur l'implémentation de cet exemple je vous reommande vivement link:http://blog.xebia.fr/2012/04/04/monades-java-monstre-cosmique/[cet article] écrit par link:https://kerflyn.wordpress.com/[François Sarradin] du blog de Xébia dont je me suis fortement inspiré.
+Pour avoir plus de détail sur l'implémentation de cet exemple je vous recommande vivement link:http://blog.xebia.fr/2012/04/04/monades-java-monstre-cosmique/[cet article] écrit par link:https://kerflyn.wordpress.com/[François Sarradin] du blog de Xébia dont je me suis fortement inspiré.
 
 === Conclusion
 
